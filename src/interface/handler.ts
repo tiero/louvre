@@ -1,6 +1,11 @@
 
-import  * as tradeMessages from "tdex-protobuf/generated/js/trade_pb";
-import  * as typesMessages from "tdex-protobuf/generated/js/types_pb";
+import {
+	sendUnaryData,
+	ServerUnaryCall,
+	status,
+} from '@grpc/grpc-js';
+import * as tradeMessages from "tdex-protobuf/generated/js/trade_pb";
+import * as typesMessages from "tdex-protobuf/generated/js/types_pb";
 import { TradeServiceInterface } from "../application/trade";
 import { MarketWithFee } from "../application/types";
 
@@ -13,13 +18,16 @@ export class TradeHandler {
 		this.tradeService = tradeService;
 	}
 
-	markets(_: any, callback:any) {
+	async markets(
+		_: any,
+		callback: sendUnaryData<tradeMessages.MarketsReply>
+	): Promise<void> {
 		const mkts = this.tradeService.getMarkets()
 			.map((m: MarketWithFee) => {
 
 				const fixed = new typesMessages.Fixed();
 				fixed.setBaseFee(m.Fee.FixedBaseFee);
-				fixed.setQuoteFee(m.Fee.FixedQuoteFee); 
+				fixed.setQuoteFee(m.Fee.FixedQuoteFee);
 
 				const fee = new typesMessages.Fee();
 				fee.setFixed(fixed);
@@ -37,26 +45,86 @@ export class TradeHandler {
 
 		const reply = new tradeMessages.MarketsReply();
 		reply.setMarketsList(mkts);
-		
+
 		callback(null, reply);
 	}
+
+	async balances(
+		call: ServerUnaryCall<tradeMessages.BalancesRequest, tradeMessages.BalancesReply>,
+		callback: sendUnaryData<tradeMessages.BalancesReply>
+	): Promise<void> {
+
+		if (!call.request || !call.request.getMarket()) return callback({
+			code: status.INVALID_ARGUMENT,
+			message: 'Malformed request',
+		});
+
+		const market = call.request.getMarket();
+
+		if (!market) return callback({
+			code: status.INVALID_ARGUMENT,
+			message: 'Missing market',
+		});
+
+		try {
+			const {Balance, Fee} = await this.tradeService.getMarketBalance({
+				BaseAsset: market.getBaseAsset(),
+				QuoteAsset: market.getQuoteAsset(),
+			});
+
+			const balance = new typesMessages.Balance();
+			balance.setBaseAmount(Balance.BaseAmount);
+			balance.setQuoteAmount(Balance.QuoteAmount);
+
+			const fixed = new typesMessages.Fixed();
+			fixed.setBaseFee(Fee.FixedBaseFee);
+			fixed.setQuoteFee(Fee.FixedQuoteFee);
+
+			const fee = new typesMessages.Fee();
+			fee.setFixed(fixed);
+
+			const balanceWFee = new typesMessages.BalanceWithFee();
+			balanceWFee.setFee(fee);
+			balanceWFee.setBalance(balance);
+
+			const reply = new tradeMessages.BalancesReply();
+			reply.setBalancesList([balanceWFee]);
+
+			callback(null, reply);
+		} catch (e: any) {
+			return callback((e as Error), null);
+		}
+
 	
-	balances(_: any, callback:any) {
-		const reply = new tradeMessages.BalancesReply();
-		callback(null, reply);
 	}
-	
-	marketPrice(_: any, callback:any) {
+
+	marketPrice(_: any, callback: any) {
 		const reply = new tradeMessages.MarketPriceReply();
 		callback(null, reply);
 	}
-	
-	proposeTrade(_: any, callback:any) {
+
+	async proposeTrade(	
+		call: ServerUnaryCall<tradeMessages.ProposeTradeRequest, tradeMessages.ProposeTradeReply>,
+		callback: sendUnaryData<tradeMessages.ProposeTradeReply>
+	): Promise<void> {
+
+		if (!call.request || !call.request.getMarket()) return callback({
+			code: status.INVALID_ARGUMENT,
+			message: 'Malformed request',
+		});
+
+		const market = call.request.getMarket();
+
+		if (!market) return callback({
+			code: status.INVALID_ARGUMENT,
+			message: 'Missing market',
+		});
+
 		const reply = new tradeMessages.ProposeTradeReply();
 		callback(null, reply);
 	}
-	
-	completeTrade(_: any, callback:any) {
+
+	completeTrade(_: any, callback: any) {
 		const reply = new tradeMessages.CompleteTradeReply();
 		callback(null, reply);
 	}

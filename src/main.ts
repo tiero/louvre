@@ -11,10 +11,9 @@ const address = '0.0.0.0:9945';
 const server = new Server();
 
 const market = {
-  BaseAsset: "9b6e06f2a685e58ac6162e2389b74920d8ca43765dc3199a6d8ea74680d1cc39",
+  BaseAsset: "37fba7b799d3e581f170e1135336bb7896ddaa4a59b536b1ec066e484e963b6b",
   QuoteAsset: "2dcf5a8834645654911964ec3602426fd3b9b4017554d3f9c19403e7fc1411d3"
 };
-
 
 async function main() {
 
