@@ -24,3 +24,13 @@ export type MarketWithFee = {
   Market: Market;
   Fee: Fee;
 }
+
+export enum TradeType {
+  BUY,
+  SELL
+}
+
+export interface TradeAcceptOrFail {
+  isRejected: boolean;
+  transaction: string;
+}
