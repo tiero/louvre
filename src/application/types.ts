@@ -30,7 +30,27 @@ export enum TradeType {
   SELL
 }
 
-export interface TradeAcceptOrFail {
-  isRejected: boolean;
-  transaction: string;
+export interface Prices {
+  BasePrice: number;
+  QuotePrice: number;
 }
+
+export interface SwapTerms {
+  InputAmount: number;
+  OutputAmount: number;
+  InputAsset: string;
+  OutputAsset: string;
+}
+
+export interface SwapTransaction {
+  Transaction: string;
+  InputBlindingKeyByScript: Record<string,Uint8Array>;
+  OutputBlindingKeyByScript: Record<string,Uint8Array>;
+  ExpiryTime?: number;
+}
+
+export interface SwapAcceptOrFail { 
+  isRejected: boolean, 
+  acceptTx?: SwapTransaction, 
+  failure?: string
+};

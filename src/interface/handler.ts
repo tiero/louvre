@@ -120,6 +120,37 @@ export class TradeHandler {
 			message: 'Missing market',
 		});
 
+		const swapRequest = call.request.getSwapRequest();
+
+		if (!swapRequest) return callback({
+			code: status.INVALID_ARGUMENT,
+			message: 'Missing swap request',
+		});
+
+		try {
+			await this.tradeService.proposeTrade(
+				{
+					BaseAsset: market.getBaseAsset(),
+					QuoteAsset: market.getQuoteAsset(),
+				},
+				call.request.getType(),
+				{
+					InputAmount: swapRequest.getAmountP(),
+					OutputAmount: swapRequest.getAmountR(),
+					InputAsset: swapRequest.getAssetP(),
+					OutputAsset: swapRequest.getAssetR(),
+				},
+				{
+					Transaction: swapRequest.getTransaction(),
+					InputBlindingKeyByScript: swapRequest.getInputBlindingKeyMap(),
+					OutputBlindingKeyByScript:swapRequest.getOutputBlindingKeyMap(),
+				}
+			);
+		} catch(e: any) {
+			return callback((e as Error), null);
+		}
+
+
 		const reply = new tradeMessages.ProposeTradeReply();
 		callback(null, reply);
 	}
