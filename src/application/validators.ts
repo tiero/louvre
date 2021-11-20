@@ -1,5 +1,6 @@
-import { Swap } from "../domain/swap";
-import { Market, Prices, SwapTerms, TradeType } from "./types";
+import { SwapTerms } from "../domain/swap";
+import { inGivenOut, outGivenIn } from "./price";
+import { Market, Price, TradeType } from "./types";
 
 export function requireValidMarket(valid: Market, given: Market) {
   if (given.BaseAsset !== valid.BaseAsset)
@@ -7,6 +8,11 @@ export function requireValidMarket(valid: Market, given: Market) {
 
   if (given.QuoteAsset !== valid.QuoteAsset)
   throw new Error('quote asset must be ' + valid.QuoteAsset);
+}
+
+export function requireValidAsset(market:Market, asset: string) {
+  if (market.BaseAsset !== asset && market.QuoteAsset !== asset)
+    throw new Error('asset is not included in given market');
 }
 
 export function requireEnoughBalance(
@@ -38,13 +44,9 @@ export function requireValidTradeType(market: Market, type: TradeType, terms: Sw
     throw new Error('trade type SELL must match the swap terms');
 }
 
-export function requireValidPrice(type: TradeType, terms: SwapTerms, prices: Prices) {
+export function requireValidPrice(type: TradeType, terms: SwapTerms, prices: Price) {
   const isBuy = type === TradeType.BUY;
-
-  const outGivenIn = isBuy ? terms.InputAmount / prices.BasePrice : terms.InputAmount / prices.QuotePrice;
-  const inGivenOut = isBuy ? terms.OutputAmount * prices.BasePrice : terms.OutputAmount * prices.QuotePrice;
-
-  if (terms.OutputAmount !== outGivenIn || terms.InputAmount !== inGivenOut) {
+  if (terms.OutputAmount !== outGivenIn(isBuy, terms, prices) || terms.InputAmount !== inGivenOut(isBuy, terms, prices)) {
     throw new Error("bad pricing");
   }
 }

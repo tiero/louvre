@@ -1,3 +1,5 @@
+import { SwapTransaction } from "../domain/swap"
+
 export type Market = {
 	BaseAsset:  string;
 	QuoteAsset: string;
@@ -30,27 +32,34 @@ export enum TradeType {
   SELL
 }
 
+export interface Price {
+  BasePrice: number;
+  QuotePrice: number;
+}
+
+export interface PriceWithFee {
+  Price: Price;
+  Fee: Fee;
+  Amount: number;
+  Asset: string;
+  Balance: Balance;
+}
+
+
 export interface Prices {
   BasePrice: number;
   QuotePrice: number;
 }
 
-export interface SwapTerms {
-  InputAmount: number;
-  OutputAmount: number;
-  InputAsset: string;
-  OutputAsset: string;
-}
-
-export interface SwapTransaction {
-  Transaction: string;
-  InputBlindingKeyByScript: Record<string,Uint8Array>;
-  OutputBlindingKeyByScript: Record<string,Uint8Array>;
-  ExpiryTime?: number;
-}
 
 export interface SwapAcceptOrFail { 
-  isRejected: boolean, 
-  acceptTx?: SwapTransaction, 
-  failure?: string
+  isRejected: boolean;
+  acceptTx?: SwapTransaction; 
+  failure?: string;
 };
+
+export interface TxHashOrError {
+  isInvalid: boolean;
+  txid?: string;
+  error?: string;
+}
