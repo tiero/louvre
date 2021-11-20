@@ -1,18 +1,16 @@
-
-export interface SwapTerms {
+export type SwapTerms = {
   InputAmount: number;
   OutputAmount: number;
   InputAsset: string;
   OutputAsset: string;
-}
+};
 
-export interface SwapTransaction {
+export type SwapTransaction = {
   Transaction: string;
   InputBlindingKeyByScript: BlindKeysMap;
   OutputBlindingKeyByScript: BlindKeysMap;
   ExpiryTime?: number;
-}
-
+};
 
 export type BlindKeysMap = Record<string, Buffer>;
 

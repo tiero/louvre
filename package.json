@@ -4,7 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "npx nodemon src/main.ts --watch /src"
+    "start": "npx nodemon src/main.ts --watch /src",
+    "lint": "npx eslint --ignore-path .eslintignore --ext .ts .",
+    "format:check": "npx prettier --ignore-path .gitignore --check \"**/*.+(ts)\"",
+    "format": "npx prettier --ignore-path .gitignore --write \"**/*.+(ts)\""
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.4.3",
@@ -14,7 +17,11 @@
     "tdex-protobuf": "tdex-network/tdex-protobuf"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "eslint": "^8.2.0",
     "nodemon": "^2.0.14",
+    "prettier": "^2.4.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   }
