@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "npx nodemon src/main.ts --watch /src",
+    "build": "npx tsc --build",
     "lint": "npx eslint --ignore-path .eslintignore --ext .ts .",
     "format:check": "npx prettier --ignore-path .gitignore --check \"**/*.+(ts)\"",
     "format": "npx prettier --ignore-path .gitignore --write \"**/*.+(ts)\""
