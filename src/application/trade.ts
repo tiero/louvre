@@ -31,15 +31,11 @@ import { Transaction } from 'liquidjs-lib';
 import { pricePreview } from './price';
 import { SwapTerms, SwapTransaction } from '../domain/swap';
 import axios from 'axios';
+
 const DEFAULT_FEE: Fee = {
   BasisPoint: 0,
   FixedBaseFee: 0,
   FixedQuoteFee: 0,
-};
-
-const PRICES: Prices = {
-  BasePrice: 100,
-  QuotePrice: 0.01,
 };
 
 export type TradeServiceInterface = {
@@ -64,6 +60,7 @@ export class TradeService implements TradeServiceInterface {
   constructor(
     private wallet: PrivateKey,
     private market: Market,
+    private prices: Prices,
     private explorerUrl: string
   ) {}
 
@@ -80,7 +77,7 @@ export class TradeService implements TradeServiceInterface {
     const isBaseAsset = asset === market.BaseAsset;
     const previewAsset = isBaseAsset ? market.QuoteAsset : market.BaseAsset;
 
-    const previewAmount = pricePreview(isBuy, isBaseAsset, amount, PRICES);
+    const previewAmount = pricePreview(isBuy, isBaseAsset, amount, this.prices);
 
     const { baseAmount, quoteAmount } = await getBalancesForMarket(
       this.market,
@@ -89,7 +86,7 @@ export class TradeService implements TradeServiceInterface {
     );
 
     return {
-      Price: PRICES,
+      Price: this.prices,
       Fee: DEFAULT_FEE,
       Amount: previewAmount,
       Asset: previewAsset,
@@ -108,7 +105,7 @@ export class TradeService implements TradeServiceInterface {
   ): Promise<SwapAcceptOrFail> {
     requireValidMarket(this.market, market);
     requireValidTradeType(this.market, tradeType, terms);
-    requireValidPrice(tradeType, terms, PRICES);
+    requireValidPrice(tradeType, terms, this.prices);
 
     const balances = await getBalancesForMarket(
       market,
