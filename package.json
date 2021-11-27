@@ -1,10 +1,10 @@
 {
-  "name": "louvre",
+  "name": "zion",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "npx nodemon src/main.ts --watch /src",
+    "dev": "ZION_BASE_PRICE=500 ZION_SIGNING_KEY=cUFtCy7Gw6XyPbYv1XYTGncvXLo2YgRigv6AMiyiFdewTdiFEZQs ZION_BLINDING_KEY=cVYgo6AgiooUJhQArxL61zCvchgBroYxfuezbHZkpqqiT3cRgFet  npx nodemon src/main.ts --watch /src",
     "build": "npx tsc --build",
     "lint": "npx eslint --ignore-path .eslintignore --ext .ts .",
     "format:check": "npx prettier --ignore-path .gitignore --check \"**/*.+(ts)\"",
