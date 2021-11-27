@@ -65,9 +65,3 @@ EXPOSE 8000
 EXPOSE 9945
 
 ENTRYPOINT ["/entrypoint.sh"]
-
-
-
-
-
-

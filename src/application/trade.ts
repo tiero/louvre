@@ -178,12 +178,8 @@ export class TradeService implements TradeServiceInterface {
       hex = Transaction.fromHex(hexOrBase64).toHex();
     }
 
-    try {
-      const txid = (await axios.post(`${this.explorerUrl}/tx`, hex)).data;
-      return { isInvalid: false, txid };
-    } catch (err) {
-      throw err;
-    }
+    const txid = (await axios.post(`${this.explorerUrl}/tx`, hex)).data;
+    return { isInvalid: false, txid };
   }
 
   async getMarketBalance(market: Market): Promise<BalanceWithFee> {
