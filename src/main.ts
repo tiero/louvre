@@ -1,9 +1,13 @@
-import { Server, ServerCredentials } from '@grpc/grpc-js';
 import { IdentityType, PrivateKey } from 'ldk';
+import { Server, ServerCredentials } from '@grpc/grpc-js';
 import * as grpcServices from 'tdex-protobuf/generated/js/trade_grpc_pb';
-import { TradeService } from './application/trade';
-import { TradeHandler } from './interface/handler';
+
+
+import log from './logger';
 import options, { Config } from './config';
+import { TradeHandler } from './interface/handler';
+import { TradeService } from './application/trade';
+
 
 const server = new Server();
 
@@ -17,7 +21,7 @@ export async function startApp(config: Config) {
     },
   });
 
-  console.info((await privateKey.getNextAddress()).confidentialAddress);
+  log.info((await privateKey.getNextAddress()).confidentialAddress);
 
   const tradeService = new TradeService(
     privateKey,
@@ -41,14 +45,14 @@ export async function startApp(config: Config) {
 function listen(address: string) {
   server.bindAsync(address, ServerCredentials.createInsecure(), () => {
     server.start();
-    console.info('Trader gRPC server is running on ' + address);
+    log.info('Trader gRPC server is running on ' + address);
   });
 }
 
 async function stop(): Promise<void> {
   return new Promise((resolve) =>
     server.tryShutdown(() => {
-      console.info('Trader gRPC server completed shutdown');
+      log.info('Trader gRPC server completed shutdown');
       resolve();
     })
   );

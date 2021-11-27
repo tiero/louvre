@@ -182,7 +182,6 @@ export class TradeService implements TradeServiceInterface {
       const txid = (await axios.post(`${this.explorerUrl}/tx`, hex)).data;
       return { isInvalid: false, txid };
     } catch (err) {
-      console.error('failed to broadcast', hex);
       throw err;
     }
   }

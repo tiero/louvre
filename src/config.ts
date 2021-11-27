@@ -11,9 +11,16 @@ const options = require('yargs') // eslint-disable-line
   })
   .option('chain', {
     choices: chains,
-    demandOption: true,
     default: 'regtest',
     description: 'elements network',
+  })
+  .option('signing-key', {
+    description: 'private key used for signing (WIF)',
+    demandOption : true,
+  })
+  .option('blinding-key', {
+    description: 'private key used for blinding (WIF)',
+    demandOption : true,
   })
   .option('base-asset', {
     type: 'string',

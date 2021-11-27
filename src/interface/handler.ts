@@ -5,6 +5,7 @@ import * as typesMessages from 'tdex-protobuf/generated/js/types_pb';
 import { TradeServiceInterface } from '../application/trade';
 import { MarketWithFee } from '../application/types';
 import { blindKeysMap } from '../domain/swap';
+import log from '../logger';
 
 export class TradeHandler {
   public tradeService: TradeServiceInterface;
@@ -234,7 +235,7 @@ export class TradeHandler {
       reply.setExpiryTimeUnix(result.acceptTx!.ExpiryTime!);
       callback(null, reply);
     } catch (e: any) {
-      console.error(e);
+      log.error(e);
       return callback(e as Error, null);
     }
   }
@@ -280,7 +281,7 @@ export class TradeHandler {
       reply.setTxid(result.txid!);
       callback(null, reply);
     } catch (e: any) {
-      console.error(e);
+      log.error(e);
       return callback(e as Error, null);
     }
   }
