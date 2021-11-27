@@ -57,11 +57,10 @@ WORKDIR /
 # Copy the proxy
 COPY --from=proxy /app/grpcwebproxy .
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+COPY entrypoint .
+RUN chmod +x entrypoint
 
 # Expose ports
-EXPOSE 8000
-EXPOSE 9945
+EXPOSE 8080
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint"]

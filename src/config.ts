@@ -16,11 +16,11 @@ const options = require('yargs') // eslint-disable-line
   })
   .option('signing-key', {
     description: 'private key used for signing (WIF)',
-    demandOption : true,
+    demandOption: true,
   })
   .option('blinding-key', {
     description: 'private key used for blinding (WIF)',
-    demandOption : true,
+    demandOption: true,
   })
   .option('base-asset', {
     type: 'string',

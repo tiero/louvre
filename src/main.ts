@@ -2,12 +2,10 @@ import { IdentityType, PrivateKey } from 'ldk';
 import { Server, ServerCredentials } from '@grpc/grpc-js';
 import * as grpcServices from 'tdex-protobuf/generated/js/trade_grpc_pb';
 
-
 import log from './logger';
 import options, { Config } from './config';
 import { TradeHandler } from './interface/handler';
 import { TradeService } from './application/trade';
-
 
 const server = new Server();
 
