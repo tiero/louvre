@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ZION_SIGNING_KEY" : {
+      "description": "private key used for signing (WIF)",
+      "required": true
+    },
+    "ZION_BLINDING_KEY" : {
+      "description": "private key used for blinding (WIF)",
+      "required": true
+    }
+  }
+}
